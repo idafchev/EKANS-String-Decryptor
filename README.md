@@ -1,9 +1,9 @@
 # EKANS-String-Decryptor
-A python script to decrypt the strings inside the EKANS ransomware.
-The script is tested with only two samples, so there might be bugs.
+A python script to decrypt the strings inside the EKANS ransomware.  
+The script is tested with only two samples, so there might be bugs.  
 
-There are several output formats. 
-It can generate an IDA IDC script suitable for bulk renaming all string decryption functions.
+There are several output formats.  
+It can generate an IDA IDC script suitable for bulk renaming all string decryption functions.  
 Just Shift+F2, copy/paste and run.
 
 ```
