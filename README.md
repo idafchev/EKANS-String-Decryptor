@@ -13,5 +13,5 @@ Options:
  -c print column formatted (tab separated) output
     strings are trimmed to include maximum 20 characters.
  -i output in IDA IDC script format
-    useful to bulk rename all function
+    useful to bulk rename all functions
 ```
