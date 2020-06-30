@@ -1,4 +1,4 @@
-# EKANS-String-Decryptor
+# EKANS String Decryptor
 A python script to decrypt the strings inside the EKANS ransomware.  
 The script is tested with only two samples, so there might be bugs.  
 
