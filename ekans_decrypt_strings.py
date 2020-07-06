@@ -10,6 +10,8 @@ Options:
  -c print column formatted (tab separated) output
     strings are trimmed to include maximum 20 characters.
  -i output in IDA IDC script format
+    useful to bulk rename all functions
+ -g output in Ghidra python script format
     useful to bulk rename all functions'''
 
 # Signature used to match a place inside the string decryption routines.
@@ -76,6 +78,36 @@ def print_ida_idc(encrypted_strings):
 		ida_fcn_name = "decrypt_str_" + plaintext[:50] + "_" + hex(enc_str.fcn_base_address)
 		print('MakeName({}, "{}");'.format(hex(enc_str.fcn_base_address), ida_fcn_name))	
 
+def print_ghidra_python(encrypted_strings):
+	script = '''
+from ghidra.program.model.symbol import SourceType\n
+# Get the FunctionManager
+fm = currentProgram.getFunctionManager()\n\n'''
+	addresses = []
+	names = []
+	for enc_str in encrypted_strings:
+		plaintext = ascii2alnum(enc_str.plaintext)
+		ghidra_fcn_name = "decrypt_str_" + plaintext[:50] + "_" + hex(enc_str.fcn_base_address)
+		addresses.append(hex(enc_str.fcn_base_address))
+		names.append(ghidra_fcn_name)
+
+	script += "addresses={}\n".format(str(addresses))
+	script += "names={}\n\n".format(str(names))
+
+	script +='''
+for i in range(len(names)):
+    # Get address from String
+    address = currentProgram.getAddressFactory().getAddress(addresses[i])
+
+    # Get a function at a certain address
+    f = fm.getFunctionAt(address)
+    if f == None:
+        f = createFunction(address, names[i])
+    else:
+        f.setName(names[i], SourceType.USER_DEFINED)
+'''
+	print(script)		
+		
 class EncryptedString:
 	sig_match_offset = None
 	fcn_base_offset = None
@@ -99,7 +131,7 @@ if len(sys.argv) != 3:
 option = sys.argv[1]
 filename = sys.argv[2]
 
-if option not in ['-s','-c','-i']:
+if option not in ['-s','-c','-i','-g']:
 	print("Invalid option!")
 	print(usage)
 	sys.exit(1)
@@ -186,3 +218,5 @@ elif option == '-c':
 	print_columns(encrypted_strings)
 elif option == '-i':
 	print_ida_idc(encrypted_strings)
+elif option == '-g':
+	print_ghidra_python(encrypted_strings)
