@@ -14,6 +14,10 @@ Options:
 
 # Signature used to match a place inside the string decryption routines.
 # Used as a reference to access the key and ciphertext by offsets.
+'''
+0F B6 34 2B    movzx   esi, byte ptr [ebx+ebp]
+8D 34 6E       lea     esi, [esi+ebp*2]
+'''
 fcn_dec_sig = b"\x0f\xb6\x34\x2b\x8d\x34\x6e"
 
 # Bytecodes of [lea eax, lea ebx, lea ecx, lea edx, lea esi, lea edi, lea ebp]
@@ -24,6 +28,9 @@ lea_sig = b"\x8d"
 
 # Go function signature for x86_32 windows binary
 # Used to locate the base address of the string decryption function
+'''
+64 8B 0D 14 00 00 00    mov     ecx, large fs:14h
+'''
 go_fcn_sig = b"\x64\x8b\x0d\x14\x00\x00\x00"
 
 def decrypt_string(enc_str):
